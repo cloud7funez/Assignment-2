@@ -1,5 +1,4 @@
 import cc_data
-import cc_json_data
 import cc_dat_utils
 import sys
 import json
@@ -15,35 +14,58 @@ def transform(json_file):
         ccl.lower_layer = each_level["lower_layer"]
         optional_layer = each_level["optional_layer"]
 
-        ccmt = cc_data.CCMapTitleField()
-        ccmt.title = handling_optional(3, optional_layer)
+        title = handling_optional(3, optional_layer)
+        ccmt = cc_data.CCMapTitleField(title)
         cc_dat.levels.append(ccmt)
 
         if handling_optional(4, optional_layer) != []:
-            cctc = cc_data.CCTrapControlsField()
-            cctc.brown_button_trap = handling_optional(4, optional_layer)
+            brown_button_trap = handling_optional(4, optional_layer)
+            butt_trap_list = []
+            l = len(brown_button_trap)
+            i = 0
+            while (i < l):
+                buttCoor = brown_button_trap[i]
+                trapCoor = brown_button_trap[i+1]
+                butt_trap_list.append(cc_data.CCTrapControl
+                                      (buttCoor[0],buttCoor[1],trapCoor[0],trapCoor[1]))
+                i = i + 2
+
+            cctc = cc_data.CCTrapControlsField(butt_trap_list)
             cc_dat.levels.append(cctc)
 
         if handling_optional(5, optional_layer) != []:
-            cccm = cc_data.CCCloningMachineControl()
-            cccm.red_button = handling_optional(5, optional_layer)
+            red_button = handling_optional(5, optional_layer)
+            red_button_cloning_list = []
+            for each_set in red_button:
+                buttCoor = each_set[0]
+                cloningCoor = each_set[1]
+                red_button_cloning_list.append(cc_data.CCCloningMachineControl
+                                (buttCoor[0],buttCoor[1],cloningCoor[0],cloningCoor[1]))
+
+            cccm = cc_data.CCCloningMachineControl(red_button_cloning_list)
             cc_dat.levels.append(cccm)
 
-        ccep = cc_data.CCEncodedPasswordField()
-        ccep.password = handling_optional(6, optional_layer)
+        password = handling_optional(6, optional_layer)
+        ccep = cc_data.CCEncodedPasswordField(password)
         cc_dat.levels.append(ccep)
 
         if handling_optional(7, optional_layer) != []:
-            ccmh = cc_data.CCMapHintField()
-            ccmh.hint = handling_optional(7, optional_layer)
+            hint = handling_optional(7, optional_layer)
+            ccmh = cc_data.CCMapHintField(hint)
             cc_dat.levels.append(ccmh)
 
         if handling_optional(10, optional_layer) != []:
-            ccmm = cc_data.CCMonsterMovementField()
-            ccmm.monster = handling_optional(10, optional_layer)
+            monsters = handling_optional(10, optional_layer)
+            monster_list = []
+            for each_monster in monsters:
+                mx = each_monster[0]
+                my = each_monster[1]
+                monCoor = cc_data.CCCoordinate(mx, my)
+                monster_list.append(monCoor)
+            ccmm = cc_data.CCMonsterMovementField(monster_list)
             cc_dat.levels.append(ccmm)
 
-    output_file = cc_dat_util.write_cc_data_to_dat(cc_dat, "ziqiaot_CC.dat")
+    output_file = cc_dat_utils.write_cc_data_to_dat(cc_dat, "ziqiaot_CC.dat")
     return output_file
 
 def handling_optional(type, optionalField):
