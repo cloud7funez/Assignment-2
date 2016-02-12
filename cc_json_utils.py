@@ -16,9 +16,9 @@ def transform(json_file):
 
         title = handling_optional(3, optional_layer)
         ccmt = cc_data.CCMapTitleField(title)
-        cc_dat.levels.append(ccmt)
+        ccl.optional_fields.append(ccmt)
 
-        if handling_optional(4, optional_layer) != []:
+        if handling_optional(4, optional_layer) != None:
             brown_button_trap = handling_optional(4, optional_layer)
             butt_trap_list = []
             l = len(brown_button_trap)
@@ -31,9 +31,10 @@ def transform(json_file):
                 i = i + 2
 
             cctc = cc_data.CCTrapControlsField(butt_trap_list)
-            cc_dat.levels.append(cctc)
+            ccl.optional_fields.append(cctc)
 
-        if handling_optional(5, optional_layer) != []:
+
+        if handling_optional(5, optional_layer) != None:
             red_button = handling_optional(5, optional_layer)
             red_button_cloning_list = []
             for each_set in red_button:
@@ -43,18 +44,18 @@ def transform(json_file):
                                 (buttCoor[0],buttCoor[1],cloningCoor[0],cloningCoor[1]))
 
             cccm = cc_data.CCCloningMachineControl(red_button_cloning_list)
-            cc_dat.levels.append(cccm)
+            ccl.optional_fields.append(cccm)
 
         password = handling_optional(6, optional_layer)
         ccep = cc_data.CCEncodedPasswordField(password)
-        cc_dat.levels.append(ccep)
+        ccl.optional_fields.append(ccep)
 
-        if handling_optional(7, optional_layer) != []:
+        if handling_optional(7, optional_layer) != None:
             hint = handling_optional(7, optional_layer)
             ccmh = cc_data.CCMapHintField(hint)
-            cc_dat.levels.append(ccmh)
+            ccl.optional_fields.append(ccmh)
 
-        if handling_optional(10, optional_layer) != []:
+        if handling_optional(10, optional_layer) != None:
             monsters = handling_optional(10, optional_layer)
             monster_list = []
             for each_monster in monsters:
@@ -63,10 +64,11 @@ def transform(json_file):
                 monCoor = cc_data.CCCoordinate(mx, my)
                 monster_list.append(monCoor)
             ccmm = cc_data.CCMonsterMovementField(monster_list)
-            cc_dat.levels.append(ccmm)
+            ccl.optional_fields.append(ccmm)
 
-    output_file = cc_dat_utils.write_cc_data_to_dat(cc_dat, "ziqiaot_CC.dat")
-    return output_file
+        cc_dat.levels.append(ccl)
+
+    cc_dat_utils.write_cc_data_to_dat(cc_dat, "ziqiaot.dat")
 
 def handling_optional(type, optionalField):
     for option in optionalField:
